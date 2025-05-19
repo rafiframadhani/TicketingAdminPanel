@@ -9,11 +9,12 @@ import {
   TableCell,
 } from "../components/ui/Table";
 import { Button } from "../components/ui/button"; // pastikan ada
-import AddConcertForm from "../components/AddConcertForm"; // Import formulir yang baru
+import AddConcertForm from "../components/AddConcertForm";
+import { Link } from "react-router-dom"; // Import Link
 
 export default function Concerts() {
   const [concerts, setConcerts] = useState([]);
-  const [isAdding, setIsAdding] = useState(false); // State untuk menampilkan/menyembunyikan form
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     setConcerts(dummyConcerts); // nanti diganti ke API
@@ -25,8 +26,8 @@ export default function Concerts() {
 
   const handleAddConcert = (newConcert) => {
     setConcerts([...concerts, newConcert]);
-    setIsAdding(false); // Sembunyikan form setelah menambah
-    console.log("Konser baru ditambahkan:", newConcert); // Sementara untuk melihat data
+    setIsAdding(false);
+    console.log("Konser baru ditambahkan:", newConcert);
     // Di sini nanti kita akan melakukan POST ke API
   };
 
@@ -68,7 +69,9 @@ export default function Concerts() {
                 {new Date(concert.concertEnd).toLocaleString()}
               </TableCell>
               <TableCell>
-                <Button variant="outline" className="mr-2">Edit</Button>
+                <Link to={`/concerts/edit/${concert.id}`} className="mr-2">
+                  <Button variant="outline">Edit</Button>
+                </Link>
                 <Button variant="destructive" onClick={() => handleDelete(concert.id)}>
                   Hapus
                 </Button>

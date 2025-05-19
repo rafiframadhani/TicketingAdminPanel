@@ -8,12 +8,13 @@ import {
   TableBody,
   TableCell,
 } from "../components/ui/Table";
+import { Link } from "react-router-dom"; // Import Link
+import { Button } from "../components/ui/button"; // Pastikan Button diimport
 
 const getConcertNameById = (id) => {
   const concert = dummyConcerts.find((c) => c.id === id);
   return concert ? concert.name : "Unknown Concert";
 };
-
 
 export default function Tickets() {
   return (
@@ -28,6 +29,7 @@ export default function Tickets() {
             <TableHead>Quota</TableHead>
             <TableHead>Konser</TableHead>
             <TableHead>Penjualan</TableHead>
+            <TableHead>Aksi</TableHead> {/* Tambah kolom aksi */}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,6 +43,12 @@ export default function Tickets() {
               <TableCell>
                 {new Date(ticket.salesStart).toLocaleDateString()} –{" "}
                 {new Date(ticket.salesEnd).toLocaleDateString()}
+              </TableCell>
+              <TableCell>
+                <Link to={`/tickets/edit/${ticket.id}`} className="mr-2">
+                  <Button variant="outline">Edit</Button>
+                </Link>
+                {/* Tambahkan tombol hapus jika diperlukan */}
               </TableCell>
             </TableRow>
           ))}

@@ -3,6 +3,8 @@ import Dashboard from './pages/Dashboard'; // Asumsi Anda punya halaman Dashboar
 import Concerts from './pages/Concerts';
 import Tickets from './pages/Tickets';
 import Login from './pages/Login';
+import EditConcert from './pages/EditConcert';
+import EditTicket from './pages/EditTicket';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
@@ -16,6 +18,7 @@ const PrivateRoute = ({ children }) => {
   return isAdmin() ? children : <Navigate to="/login" />;
 };
 
+
 function App() {
   return (
     <Router>
@@ -27,9 +30,9 @@ function App() {
             <PrivateRoute>
               <div className="flex h-screen bg-gray-100">
                 <Sidebar />
-                <div className="flex-1 overflow-y-auto bg-gray-200 p-6">
+                <div className="flex-1 overflow-y-auto p-6">
                   <Navbar />
-                  <Dashboard /> {/* Tempatkan komponen Dashboard di sini */}
+                  <Dashboard />
                 </div>
               </div>
             </PrivateRoute>
@@ -41,9 +44,23 @@ function App() {
             <PrivateRoute>
               <div className="flex h-screen bg-gray-100">
                 <Sidebar />
-                <div className="flex-1 overflow-y-auto bg-gray-200 p-6">
+                <div className="flex-1 overflow-y-auto p-6">
                   <Navbar />
                   <Concerts />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/concerts/edit/:id"
+          element={
+            <PrivateRoute>
+              <div className="flex h-screen bg-gray-100">
+                <Sidebar />
+                <div className="flex-1 overflow-y-auto p-6">
+                  <Navbar />
+                  <EditConcert />
                 </div>
               </div>
             </PrivateRoute>
@@ -55,9 +72,23 @@ function App() {
             <PrivateRoute>
               <div className="flex h-screen bg-gray-100">
                 <Sidebar />
-                <div className="flex-1 overflow-y-auto bg-gray-200 p-6">
+                <div className="flex-1 overflow-y-auto p-6">
                   <Navbar />
                   <Tickets />
+                </div>
+              </div>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/tickets/edit/:id" // Route untuk edit tiket dengan parameter ID
+          element={
+            <PrivateRoute>
+              <div className="flex h-screen bg-gray-100">
+                <Sidebar />
+                <div className="flex-1 overflow-y-auto p-6">
+                  <Navbar />
+                  <EditTicket /> {/* Komponen untuk mengedit tiket */}
                 </div>
               </div>
             </PrivateRoute>

@@ -1,7 +1,7 @@
 import React from "react";
 
 export function Table({ children, className }) {
-  return <table className={`w-full border ${className}`}>{children}</table>;
+  return <table className={`w-full border border-gray-200 rounded-md ${className}`}>{children}</table>;
 }
 
 export function TableHeader({ children }) {
@@ -9,7 +9,7 @@ export function TableHeader({ children }) {
 }
 
 export function TableRow({ children }) {
-  return <tr className="border-b">{children}</tr>;
+  return <tr className="border-b border-gray-200">{children}</tr>;
 }
 
 export function TableHead({ children }) {

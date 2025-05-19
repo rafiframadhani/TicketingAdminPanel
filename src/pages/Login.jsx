@@ -12,11 +12,9 @@ const Login = () => {
         event.preventDefault();
         setError('');
 
-        // Simulasi autentikasi (ganti dengan API call sesungguhnya)
         if (username === 'admin' && password === 'password') {
-            // Simpan token atau status login di localStorage atau state global
             localStorage.setItem('isAdmin', 'true');
-            navigate('/concerts'); // Redirect ke halaman dashboard
+            navigate('/');
         } else {
             setError('Kredensial tidak valid');
         }
@@ -24,8 +22,8 @@ const Login = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-4 text-center">Login Admin</h2>
+            <div className="bg-white p-8 rounded-lg shadow-md w-96"> {/* Tambah rounded-lg */}
+                <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Login Admin</h2> {/* Ubah warna judul */}
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -51,7 +49,7 @@ const Login = () => {
                         />
                     </div>
                     <div>
-                        <Button type="submit" className="w-full">Login</Button>
+                        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">Login</Button> {/* Ubah style tombol */}
                     </div>
                 </form>
             </div>
