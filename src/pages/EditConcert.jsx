@@ -53,10 +53,10 @@ const EditConcert = () => {
     return <div>Loading...</div>; // Tampilkan pesan loading saat data belum tersedia
   }
 
-  return (
+ return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Konser</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">Edit Tiket</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-md shadow-md p-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nama Konser</label>
           <input
@@ -100,12 +100,12 @@ const EditConcert = () => {
             required
           />
         </div>
-        <div className="flex justify-end">
-          <Button type="button" className="mr-2" onClick={handleCancel}>Batal</Button>
-          <Button type="submit">Simpan Perubahan</Button>
+       <div className="flex justify-end">
+          <Button type="button" className="mr-2" variant="secondary" onClick={handleCancel}>Batal</Button> {/* Gunakan varian secondary */}
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Simpan Perubahan</Button> {/* Style tombol simpan */}
         </div>
       </form>
-    </div>
+    </div> 
   );
 };
 

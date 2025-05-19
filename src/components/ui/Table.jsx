@@ -1,20 +1,20 @@
 import React from "react";
 
 export function Table({ children, className }) {
-  return <table className={`w-full border border-gray-200 rounded-md ${className}`}>{children}</table>;
+  return <table className={`w-full border border-gray-300 rounded-md ${className}`}>{children}</table>;
 }
 
 export function TableHeader({ children }) {
-  return <thead className="bg-gray-100">{children}</thead>;
+  return <thead className="bg-gray-800">{children}</thead>;
 }
 
 export function TableRow({ children }) {
-  return <tr className="border-b border-gray-200">{children}</tr>;
+  return <tr className="border-b border-gray-300">{children}</tr>;
 }
 
 export function TableHead({ children }) {
   return (
-    <th className="p-3 text-left text-sm font-semibold text-gray-700">
+    <th className="p-3 text-left text-sm font-bold text-white">
       {children}
     </th>
   );

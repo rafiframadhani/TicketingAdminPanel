@@ -12,7 +12,7 @@ const Sidebar = () => {
                 <li>
                     <Link
                         to="/"
-                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-700 ${isActive("/") ? "bg-gray-800" : ""
+                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-500 ${isActive("/") ? "bg-gray-700" : ""
                             }`}
                     >
                         <Home size={18} /> Dashboard
@@ -21,7 +21,7 @@ const Sidebar = () => {
                 <li>
                     <Link
                         to="/tickets"
-                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-700 ${isActive("/tickets") ? "bg-gray-800" : ""
+                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-500 ${isActive("/tickets") ? "bg-gray-700" : ""
                             }`}
                     >
                         <Ticket size={18} /> Tiket
@@ -30,7 +30,7 @@ const Sidebar = () => {
                 <li>
                     <Link
                         to="/concerts"
-                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-700 ${isActive("/concerts") ? "bg-gray-800" : ""
+                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-500 ${isActive("/concerts") ? "bg-gray-700" : ""
                             }`}
                     >
                         <Music size={18} /> Konser

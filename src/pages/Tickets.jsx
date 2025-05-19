@@ -8,7 +8,7 @@ import {
   TableBody,
   TableCell,
 } from "../components/ui/Table";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button"; // Pastikan Button diimport
 
 const getConcertNameById = (id) => {
@@ -19,7 +19,7 @@ const getConcertNameById = (id) => {
 export default function Tickets() {
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Daftar Tiket</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">Daftar Tiket</h1> {/* Ubah warna judul */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -29,7 +29,7 @@ export default function Tickets() {
             <TableHead>Quota</TableHead>
             <TableHead>Konser</TableHead>
             <TableHead>Penjualan</TableHead>
-            <TableHead>Aksi</TableHead> {/* Tambah kolom aksi */}
+            <TableHead>Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -46,7 +46,7 @@ export default function Tickets() {
               </TableCell>
               <TableCell>
                 <Link to={`/tickets/edit/${ticket.id}`} className="mr-2">
-                  <Button variant="outline">Edit</Button>
+                  <Button variant="outline">Edit</Button> {/* Gunakan varian outline */}
                 </Link>
                 {/* Tambahkan tombol hapus jika diperlukan */}
               </TableCell>

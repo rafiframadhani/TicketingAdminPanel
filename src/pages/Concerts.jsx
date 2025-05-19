@@ -33,17 +33,17 @@ export default function Concerts() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Daftar Konser</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">Daftar Konser</h1> {/* Ubah warna judul */}
       <div className="mb-4 flex justify-end">
-        <Button onClick={() => setIsAdding(true)}>Tambah Konser</Button>
+        <Button onClick={() => setIsAdding(true)} className="bg-blue-600 hover:bg-blue-700 text-white">Tambah Konser</Button> {/* Style tombol tambah */}
       </div>
 
       {isAdding && (
-        <div className="mb-4 p-4 border rounded-md">
-          <h2 className="text-lg font-semibold mb-2">Tambah Konser Baru</h2>
+        <div className="mb-4 p-4 border rounded-md bg-white shadow-md"> {/* Tambah background dan shadow */}
+          <h2 className="text-lg font-semibold mb-2 text-gray-700">Tambah Konser Baru</h2>
           <AddConcertForm onAdd={handleAddConcert} />
           <div className="flex justify-end mt-4">
-            <Button variant="secondary" onClick={() => setIsAdding(false)}>Batal</Button>
+            <Button variant="secondary" onClick={() => setIsAdding(false)}>Batal</Button> {/* Gunakan varian secondary */}
           </div>
         </div>
       )}
@@ -70,9 +70,9 @@ export default function Concerts() {
               </TableCell>
               <TableCell>
                 <Link to={`/concerts/edit/${concert.id}`} className="mr-2">
-                  <Button variant="outline">Edit</Button>
+                  <Button variant="outline">Edit</Button> {/* Gunakan varian outline */}
                 </Link>
-                <Button variant="destructive" onClick={() => handleDelete(concert.id)}>
+                <Button variant="destructive" onClick={() => handleDelete(concert.id)}> {/* Gunakan varian destructive */}
                   Hapus
                 </Button>
               </TableCell>
