@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Concerts from './pages/Concerts';
-// import Tickets from './pages/Tickets'; // Hapus import ini
+
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import EditConcert from './pages/EditConcert';
-// import EditTicket from './pages/EditTicket'; // Hapus import ini
+import Transactions from './pages/Transactions';
 
 // Fungsi untuk memeriksa apakah user adalah admin (berdasarkan localStorage)
 const isAdmin = () => {
@@ -52,20 +51,19 @@ function App() {
           }
         />
         <Route
-          path="/concerts/edit/:id"
+          path="/transactions" // Route baru untuk transaksi
           element={
             <PrivateRoute>
               <div className="flex h-screen bg-gray-100">
                 <Sidebar />
                 <div className="flex-1 overflow-y-auto bg-gray-200 p-6">
                   <Navbar />
-                  <EditConcert />
+                  <Transactions />
                 </div>
               </div>
             </PrivateRoute>
           }
         />
-      
       </Routes>
     </Router>
   );
