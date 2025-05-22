@@ -13,7 +13,7 @@ import {
 import dummyUsers from '../data/dummyUsers';
 import dummyOrderDetails from '../data/dummyOrderDetails';
 import dummyTicketOrders from '../data/dummyTicketOrders';
-import dummyTickets from '../data/dummyTickets'; // Dari dummyTickets.js sebelumnya
+import dummyTickets from '../data/dummyTickets';
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);

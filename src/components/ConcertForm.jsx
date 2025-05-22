@@ -1,8 +1,7 @@
-// src/components/ConcertForm.jsx
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import dummyVenues from '../data/dummyVenues';
-import dummyCities from '../data/dummyCities'; // Perlu diimport juga untuk menampilkan nama kota
+import dummyCities from '../data/dummyCities';
 import dummyGenres from '../data/dummyGenres';
 
 // Helper untuk mendapatkan nama kota dari ID kota di venue
@@ -21,8 +20,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
     const [linkPoster, setLinkPoster] = useState(initialData.linkPoster || '');
     const [linkVenue, setLinkVenue] = useState(initialData.linkVenue || '');
 
-    // State untuk data tiket (bisa ada banyak tiket untuk satu konser)
-    const [tickets, setTickets] = useState(initialData.tickets && initialData.tickets.length > 0 ? initialData.tickets : [{ id: Date.now(), name: '', price: '', quota: '', salesStart: '', salesEnd: '' }]);
+    // State untuk data tiket
+    const [tickets, setTickets] = useState(
+        initialData.tickets && initialData.tickets.length > 0
+            ? initialData.tickets
+            : [{ id: Date.now(), name: '', price: '', quota: '', salesStart: '', salesEnd: '' }]
+    );
     // State untuk genre yang dipilih
     const [selectedGenreIds, setSelectedGenreIds] = useState(initialData.genres ? initialData.genres.map(g => g.id) : []);
 
@@ -30,8 +33,10 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
     const [venueOptions, setVenueOptions] = useState([]);
     const [genreOptions, setGenreOptions] = useState([]);
 
+    // State untuk error
+    const [errors, setErrors] = useState({});
+
     useEffect(() => {
-        // Populate venue options with city names
         const venuesWithCity = dummyVenues.map(venue => ({
             ...venue,
             cityName: getCityNameById(venue.cityId)
@@ -40,24 +45,22 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
         setGenreOptions(dummyGenres);
     }, []);
 
-    // Fungsi untuk menambah baris tiket baru
     const addTicketRow = () => {
         setTickets([...tickets, { id: Date.now(), name: '', price: '', quota: '', salesStart: '', salesEnd: '' }]);
     };
 
-    // Fungsi untuk menghapus baris tiket
     const removeTicketRow = (idToRemove) => {
         setTickets(tickets.filter(ticket => ticket.id !== idToRemove));
     };
 
-    // Fungsi untuk mengubah data tiket pada baris tertentu
     const handleTicketChange = (idToUpdate, field, value) => {
-        setTickets(tickets.map(ticket =>
-            ticket.id === idToUpdate ? { ...ticket, [field]: value } : ticket
-        ));
+        setTickets(prevTickets =>
+            prevTickets.map(ticket =>
+                ticket.id === idToUpdate ? { ...ticket, [field]: value } : ticket
+            )
+        );
     };
 
-    // Fungsi untuk mengubah pilihan genre
     const handleGenreChange = (genreId) => {
         setSelectedGenreIds(prevSelected => {
             if (prevSelected.includes(genreId)) {
@@ -68,41 +71,86 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
         });
     };
 
+    const validateForm = () => {
+    let newErrors = {};
+
+    // Validasi Konser
+    if (!name.trim()) newErrors.name = 'Nama konser harus diisi.';
+    if (!venueId) newErrors.venue = 'Venue harus dipilih.';
+    if (!concertStart) newErrors.concertStart = 'Waktu mulai konser harus diisi.';
+    if (!concertEnd) newErrors.concertEnd = 'Waktu selesai konser harus diisi.';
+
+    if (concertStart && concertEnd) {
+      if (new Date(concertStart).getTime() >= new Date(concertEnd).getTime()) { // Gunakan getTime() untuk perbandingan yang lebih akurat
+        newErrors.concertEnd = 'Waktu selesai konser harus setelah waktu mulai.';
+      }
+    }
+
+    // Validasi Genre
+    if (selectedGenreIds.length === 0) newErrors.genres = 'Pilih setidaknya satu genre.';
+
+    // Validasi Tiket
+    const ticketErrors = tickets.map((ticket, index) => {
+      let errorsForTicket = {};
+      if (!ticket.name.trim()) errorsForTicket.name = 'Nama tiket harus diisi.';
+      if (!ticket.price || parseInt(ticket.price) <= 0) errorsForTicket.price = 'Harga harus angka positif.';
+      if (!ticket.quota || parseInt(ticket.quota) <= 0) errorsForTicket.quota = 'Kuota harus angka positif.';
+      if (!ticket.salesStart) errorsForTicket.salesStart = 'Waktu mulai penjualan harus diisi.';
+      if (!ticket.salesEnd) errorsForTicket.salesEnd = 'Waktu selesai penjualan harus diisi.';
+
+      // Validasi waktu penjualan tiket (internal tiket)
+      if (ticket.salesStart && ticket.salesEnd) {
+        if (new Date(ticket.salesStart).getTime() >= new Date(ticket.salesEnd).getTime()) {
+          errorsForTicket.salesEnd = 'Waktu selesai penjualan harus setelah waktu mulai.';
+        }
+      }
+
+      // Validasi waktu penjualan tiket terhadap waktu konser (MODIFIKASI DI SINI)
+      if (concertStart && ticket.salesStart && ticket.salesEnd) { // Hanya perlu concertStart
+        const concertStartTime = new Date(concertStart).getTime();
+        const ticketSalesEndTime = new Date(ticket.salesEnd).getTime();
+
+        // Penjualan tiket selesai tidak boleh setelah konser dimulai
+        if (ticketSalesEndTime > concertStartTime) {
+          errorsForTicket.salesEnd = 'Penjualan tiket harus berakhir sebelum konser dimulai.';
+        }
+      }
+
+      return Object.keys(errorsForTicket).length > 0 ? errorsForTicket : null;
+    });
+
+    if (ticketErrors.some(err => err !== null)) {
+      newErrors.tickets = ticketErrors; // Simpan error tiket sebagai array
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // Validasi sederhana untuk tiket
-        const isValidTickets = tickets.every(ticket =>
-            ticket.name && ticket.price && ticket.quota && ticket.salesStart && ticket.salesEnd
-        );
-
-        if (!isValidTickets) {
-            alert('Mohon lengkapi semua detail tiket.');
-            return;
+        if (validateForm()) {
+            const newConcertData = {
+                ...initialData,
+                name,
+                description,
+                concertStart,
+                concertEnd,
+                venueId: parseInt(venueId),
+                linkPoster,
+                linkVenue,
+                genres: selectedGenreIds.map(id => dummyGenres.find(g => g.id === id)),
+                tickets: tickets.map(t => ({
+                    ...t,
+                    price: parseInt(t.price),
+                    quota: parseInt(t.quota),
+                })),
+            };
+            onSubmit(newConcertData);
+        } else {
+            console.log('Validasi gagal:', errors);
+            // Opsional: scroll ke atas atau ke input pertama yang error
         }
-
-        if (selectedGenreIds.length === 0) {
-            alert('Mohon pilih setidaknya satu genre.');
-            return;
-        }
-
-        const newConcertData = {
-            ...initialData, // Pertahankan ID jika ini adalah mode edit
-            name,
-            description,
-            concertStart,
-            concertEnd,
-            venueId: parseInt(venueId),
-            linkPoster,
-            linkVenue,
-            genres: selectedGenreIds.map(id => dummyGenres.find(g => g.id === id)), // Konversi ID kembali ke objek genre
-            tickets: tickets.map(t => ({
-                ...t,
-                price: parseInt(t.price),
-                quota: parseInt(t.quota),
-            })),
-        };
-        onSubmit(newConcertData);
     };
 
     return (
@@ -114,18 +162,19 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                     <input
                         type="text"
                         id="name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 ${errors.name ? 'border-red-500' : ''}`}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
                 {/* Venue */}
                 <div>
                     <label htmlFor="venueId" className="block text-sm font-medium text-gray-700">Venue</label>
                     <select
                         id="venueId"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 ${errors.venue ? 'border-red-500' : ''}`}
                         value={venueId}
                         onChange={(e) => setVenueId(e.target.value)}
                         required
@@ -137,30 +186,33 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             </option>
                         ))}
                     </select>
+                    {errors.venue && <p className="text-red-500 text-xs mt-1">{errors.venue}</p>}
                 </div>
                 {/* Waktu Mulai */}
                 <div>
-                    <label htmlFor="concertStart" className="block text-sm font-medium text-gray-700">Waktu Mulai</label>
+                    <label htmlFor="concertStart" className="block text-sm font-medium text-gray-700">Waktu Mulai Konser</label>
                     <input
                         type="datetime-local"
                         id="concertStart"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 ${errors.concertStart ? 'border-red-500' : ''}`}
                         value={concertStart}
                         onChange={(e) => setConcertStart(e.target.value)}
                         required
                     />
+                    {errors.concertStart && <p className="text-red-500 text-xs mt-1">{errors.concertStart}</p>}
                 </div>
                 {/* Waktu Selesai */}
                 <div>
-                    <label htmlFor="concertEnd" className="block text-sm font-medium text-gray-700">Waktu Selesai</label>
+                    <label htmlFor="concertEnd" className="block text-sm font-medium text-gray-700">Waktu Selesai Konser</label>
                     <input
                         type="datetime-local"
                         id="concertEnd"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2"
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 ${errors.concertEnd ? 'border-red-500' : ''}`}
                         value={concertEnd}
                         onChange={(e) => setConcertEnd(e.target.value)}
                         required
                     />
+                    {errors.concertEnd && <p className="text-red-500 text-xs mt-1">{errors.concertEnd}</p>}
                 </div>
                 {/* Link Poster */}
                 <div>
@@ -217,6 +269,7 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                         </div>
                     ))}
                 </div>
+                {errors.genres && <p className="text-red-500 text-xs mt-1">{errors.genres}</p>}
             </div>
 
             {/* Detail Tiket */}
@@ -230,11 +283,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             <input
                                 type="text"
                                 id={`ticket-name-${ticket.id}`}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${errors.tickets && errors.tickets[index] && errors.tickets[index].name ? 'border-red-500' : ''}`}
                                 value={ticket.name}
                                 onChange={(e) => handleTicketChange(ticket.id, 'name', e.target.value)}
                                 required
                             />
+                            {errors.tickets && errors.tickets[index] && errors.tickets[index].name && <p className="text-red-500 text-xs mt-1">{errors.tickets[index].name}</p>}
                         </div>
                         {/* Harga */}
                         <div>
@@ -242,11 +296,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             <input
                                 type="number"
                                 id={`ticket-price-${ticket.id}`}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${errors.tickets && errors.tickets[index] && errors.tickets[index].price ? 'border-red-500' : ''}`}
                                 value={ticket.price}
                                 onChange={(e) => handleTicketChange(ticket.id, 'price', e.target.value)}
                                 required
                             />
+                            {errors.tickets && errors.tickets[index] && errors.tickets[index].price && <p className="text-red-500 text-xs mt-1">{errors.tickets[index].price}</p>}
                         </div>
                         {/* Quota */}
                         <div>
@@ -254,11 +309,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             <input
                                 type="number"
                                 id={`ticket-quota-${ticket.id}`}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${errors.tickets && errors.tickets[index] && errors.tickets[index].quota ? 'border-red-500' : ''}`}
                                 value={ticket.quota}
                                 onChange={(e) => handleTicketChange(ticket.id, 'quota', e.target.value)}
                                 required
                             />
+                            {errors.tickets && errors.tickets[index] && errors.tickets[index].quota && <p className="text-red-500 text-xs mt-1">{errors.tickets[index].quota}</p>}
                         </div>
                         {/* Waktu Mulai Penjualan */}
                         <div>
@@ -266,11 +322,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             <input
                                 type="datetime-local"
                                 id={`ticket-sales-start-${ticket.id}`}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${errors.tickets && errors.tickets[index] && errors.tickets[index].salesStart ? 'border-red-500' : ''}`}
                                 value={ticket.salesStart}
                                 onChange={(e) => handleTicketChange(ticket.id, 'salesStart', e.target.value)}
                                 required
                             />
+                            {errors.tickets && errors.tickets[index] && errors.tickets[index].salesStart && <p className="text-red-500 text-xs mt-1">{errors.tickets[index].salesStart}</p>}
                         </div>
                         {/* Waktu Selesai Penjualan */}
                         <div>
@@ -278,11 +335,12 @@ const ConcertForm = ({ initialData = {}, onSubmit, onCancel }) => {
                             <input
                                 type="datetime-local"
                                 id={`ticket-sales-end-${ticket.id}`}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2"
+                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${errors.tickets && errors.tickets[index] && errors.tickets[index].salesEnd ? 'border-red-500' : ''}`}
                                 value={ticket.salesEnd}
                                 onChange={(e) => handleTicketChange(ticket.id, 'salesEnd', e.target.value)}
                                 required
                             />
+                            {errors.tickets && errors.tickets[index] && errors.tickets[index].salesEnd && <p className="text-red-500 text-xs mt-1">{errors.tickets[index].salesEnd}</p>}
                         </div>
                         <div className="flex items-end justify-end col-span-1 sm:col-span-2 lg:col-span-1">
                             {tickets.length > 1 && (

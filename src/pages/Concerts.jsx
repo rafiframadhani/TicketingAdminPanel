@@ -1,6 +1,5 @@
-// src/pages/Concerts.jsx
 import { useEffect, useState } from "react";
-import dummyConcerts, { getVenueById } from "../data/dummyConcerts"; // Import getVenueById
+import dummyConcerts, { getVenueById } from "../data/dummyConcerts"; 
 import {
   Table,
   TableHeader,
@@ -10,10 +9,9 @@ import {
   TableCell,
 } from "../components/ui/Table";
 import { Button } from "../components/ui/button";
-import ConcertForm from "../components/ConcertForm"; // Import ConcertForm yang baru
-import { Link } from "react-router-dom";
-import dummyCities from "../data/dummyCities"; // Import dummyCities untuk menampilkan nama kota venue
-import dummyVenues from "../data/dummyVenues"; // Import dummyVenues
+import ConcertForm from "../components/ConcertForm";
+import dummyCities from "../data/dummyCities"; 
+
 
 // Helper untuk mendapatkan nama kota dari ID kota di venue
 const getCityNameById = (cityId) => {
@@ -23,7 +21,7 @@ const getCityNameById = (cityId) => {
 
 export default function Concerts() {
   const [concerts, setConcerts] = useState([]);
-  const [isFormOpen, setIsFormOpen] = useState(false); // Mengganti isAdding menjadi isFormOpen
+  const [isFormOpen, setIsFormOpen] = useState(false); 
   const [editingConcert, setEditingConcert] = useState(null); // State untuk data konser yang sedang diedit
 
   useEffect(() => {
