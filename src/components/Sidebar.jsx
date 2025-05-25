@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Music, ReceiptText } from "lucide-react"; 
+import { Home, Music, ReceiptText, Map } from "lucide-react"; 
 
 const Sidebar = () => {
     const location = useLocation();
@@ -34,6 +34,15 @@ const Sidebar = () => {
                             }`}
                     >
                         <ReceiptText size={18} /> Transaksi
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        to="/venues-cities-genres"
+                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-700 ${isActive("/venues-cities-genre") ? "bg-gray-800" : ""
+                            }`}
+                    >
+                        <Map size={18} /> Venue, Kota, Genre
                     </Link>
                 </li>
             </ul>
