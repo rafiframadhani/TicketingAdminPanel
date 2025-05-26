@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Table({ children, className }) {
   return <table className={`w-full bg-white border border-gray-300 rounded-md ${className}`}>{children}</table>;
 }

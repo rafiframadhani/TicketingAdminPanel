@@ -7,7 +7,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "../components/ui/table";
+} from "../components/ui/Table";
 import { Button } from "../components/ui/button";
 import apiClient from '../api/axios'; // Import instance Axios
 

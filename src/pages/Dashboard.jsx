@@ -9,7 +9,7 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from '../components/ui/table';
+} from "../components/ui/Table";
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 import { CalendarDays, Ticket,Landmark, Home, MapPin } from 'lucide-react';
