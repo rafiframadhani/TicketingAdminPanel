@@ -16,12 +16,11 @@ const Login = () => {
 
         try {
             const response = await apiClient.post('/login', { email, password });
-            // Asumsikan respons memiliki properti 'token' dan 'is_admin'
-            const { token } = response.data; // Ambil is_admin dari respons
+            const { token } = response.data;
 
             // Simpan token dan is_admin. Konversi is_admin ke boolean jika perlu.
             localStorage.setItem('token', token);
-            localStorage.setItem('isAdmin', 'true'); // Pastikan tersimpan sebagai boolean true/false
+            localStorage.setItem('isAdmin', 'true');
 
             navigate('/'); // Redirect ke dashboard setelah login berhasil
         } catch (err) {

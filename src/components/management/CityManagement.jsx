@@ -159,7 +159,7 @@ const CityManagement = () => {
                                     {editingCityId === city.id ? (
                                         <div className="flex justify-end space-x-2">
                                             <Button variant="caution" onClick={handleCancelEdit}>Batal</Button>
-                                            <Button onClick={() => handleSaveEdit(city.id)}>Simpan</Button>
+                                            <Button variant="success" onClick={() => handleSaveEdit(city.id)}>Simpan</Button>
                                         </div>
                                     ) : (
                                         <div className="flex justify-end space-x-2">

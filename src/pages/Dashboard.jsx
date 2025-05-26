@@ -9,17 +9,10 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "../components/ui/table";
+} from '../components/ui/table';
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
-// Import ikon dari lucide-react
-import {
-  CalendarDays, // Untuk Total Konser
-  Ticket,       // Untuk Tiket Terjual
-  Landmark,     // Untuk Total Pendapatan (Bisa juga DollarSign, tapi Landmark cocok untuk keuangan institusi)
-  Home,         // Untuk Total Venue
-  MapPin        // Untuk Total Kota
-} from 'lucide-react'; // Pastikan lucide-react sudah terinstal
+import { CalendarDays, Ticket,Landmark, Home, MapPin } from 'lucide-react';
 
 // Fungsi helper untuk format mata uang Rupiah
 const formatRupiah = (amount) => {
@@ -57,7 +50,6 @@ const Dashboard = () => {
 
       // --- Fetch Total Kota ---
       const citiesResponse = await apiClient.get('/cities?limit=999');
-      // Periksa apakah respons memiliki total atau hitung dari panjang array data
       setTotalCities(citiesResponse.data.data.total || citiesResponse.data.data.length || 0);
 
       // --- Hitung Total Venue dari endpoint cities ---

@@ -7,9 +7,9 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "../components/ui/table.jsx";
+} from "../components/ui/table";
 import { Button } from "../components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog.jsx";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import ConcertForm from '../components/ConcertForm';
 import apiClient from '../api/axios';
 import { format } from 'date-fns';
